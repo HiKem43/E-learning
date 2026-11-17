@@ -10,10 +10,10 @@ using namespace std;
 using namespace std::chrono;
 
 // Hằng số biểu diễn giá trị vô cùng
-const int INF = 1e9;
+const long long INF = numeric_limits<long long>::max() / 4;
 struct TSPResult {
     string strategy_name;   // Tên chiến lược: BACKTRACKING, BITMASK DP, GREEDY
-    int min_cost;           // Chi phí tối thiểu (hoặc chi phí tìm được)
+    long long min_cost;           // Chi phí tối thiểu (hoặc chi phí tìm được)
     vector<int> path;       // Lộ trình đi qua các thành phố (0 -> ... -> 0)
     long long time_us;      // Thời gian chạy thực nghiệm (micro giây)   
     bool is_cost_min_label; // true: in "Chi phi toi thieu:", false: in "Chi phi:" (theo mẫu đề bài)
@@ -99,7 +99,7 @@ TSPBacktracking solver(n, C);
     solver.solve();
 
     if (solver.getBestCost() < INF) {
-        res.min_cost = (int)solver.getBestCost();
+        res.min_cost = solver.getBestCost();
         res.path = solver.getBestPath();   // gồm n + 1 phần tử: 0 -> ... -> 0
     }
     return res;
@@ -166,7 +166,7 @@ TSPResult solveBitmaskDP(int n, const vector<vector<int>>& C) {
 
     // Truy vet lo trinh
     if (bestLast != -1 && bestCost < INF_DP) {
-        res.min_cost = (int)bestCost;
+        res.min_cost = bestCost;
 
         vector<int> reversePath;
         int mask = fullMask;
@@ -216,7 +216,7 @@ TSPResult solveGreedy(int n, const vector<vector<int>>& C) {
     // Lần lượt tìm n - 1 thành phố tiếp theo theo chiến lược Láng giềng gần nhất
     for (int step = 1; step < n; ++step) {
         int next_city = -1;
-        int min_edge = INF;
+        long long min_edge = INF;
 
         for (int j = 0; j < n; ++j) {
             if (!visited[j] && C[curr][j] > 0 && C[curr][j] < min_edge) {
@@ -344,9 +344,9 @@ bool readInputFromFile(const string& filename, int& n,
 // Hàm đo thời gian thực thi của từng thuật toán
 template <typename Func>
 TSPResult executeAndMeasure(Func solver, int n, const vector<vector<int>>& C) {
-    auto start_time = high_resolution_clock::now();
+    auto start_time = steady_clock::now();
     TSPResult res = solver(n, C);
-    auto end_time = high_resolution_clock::now();
+    auto end_time = steady_clock::now();
 
     res.time_us = duration_cast<microseconds>(end_time - start_time).count();
 
@@ -389,15 +389,24 @@ void outputResult(const TSPResult& res, ofstream& fout) {
 
 // Kiem tra tinh hop le cua ket qua thuat toan
 bool checkTSPResult(const TSPResult& res, int n,
-                    const vector<vector<int>>& C) {
+    const vector<vector<int>>& C) {
 
     // Kiem tra co tim duoc lo trinh hay khong
-    if (res.min_cost == INF || res.path.size() != (size_t)n + 1) {
+    if (res.min_cost == INF ||
+        res.path.size() != (size_t)n + 1) {
         return false;
     }
 
+    // Kiem tra tat ca thanh pho nam trong pham vi hop le
+    for (int city : res.path) {
+        if (city < 0 || city >= n) {
+            return false;
+        }
+    }
+
     // Lo trinh phai bat dau va ket thuc tai thanh pho 0
-    if (res.path.front() != 0 || res.path.back() != 0) {
+    if (res.path.front() != 0 ||
+        res.path.back() != 0) {
         return false;
     }
 
@@ -408,12 +417,13 @@ bool checkTSPResult(const TSPResult& res, int n,
     for (int i = 0; i < n; ++i) {
         int city = res.path[i];
 
-        if (city < 0 || city >= n || visited[city]) {
+        if (visited[city]) {
             return false;
         }
 
         visited[city] = true;
-        totalCost += C[res.path[i]][res.path[i + 1]];
+
+        totalCost += C[city][res.path[i + 1]];
     }
 
     // Dam bao da tham tat ca thanh pho
@@ -423,7 +433,7 @@ bool checkTSPResult(const TSPResult& res, int n,
         }
     }
 
-    // Chi phi tinh lai phai bang chi phi thuat toan tra ve
+    // Kiem tra tong chi phi
     return totalCost == res.min_cost;
 }
 
