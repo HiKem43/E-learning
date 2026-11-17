@@ -347,7 +347,9 @@ TSPResult executeAndMeasure(Func solver, int n, const vector<vector<int>>& C) {
     auto start_time = high_resolution_clock::now();
     TSPResult res = solver(n, C);
     auto end_time = high_resolution_clock::now();
-    res.time_ms = duration_cast<milliseconds>(end_time - start_time).count();
+
+    res.time_us = duration_cast<microseconds>(end_time - start_time).count();
+
     return res;
 }
 
@@ -365,7 +367,7 @@ void outputResult(const TSPResult& res, ofstream& fout) {
         cout << res.path[i] << (i + 1 < res.path.size() ? " " : "");
     }
     cout << "\n";
-    cout << "Thoi gian: " << res.time_ms << " ms\n";
+    cout << "Thoi gian: " << res.time_us << " micro giay\n";
 
     // 2. Xuất ra file .txt
     if (fout.is_open()) {
@@ -380,7 +382,7 @@ void outputResult(const TSPResult& res, ofstream& fout) {
             fout << res.path[i] << (i + 1 < res.path.size() ? " " : "");
         }
         fout << "\n";
-        fout << "Thoi gian: " << res.time_ms << " ms\n";
+        fout << "Thoi gian: " << res.time_us << " micro giay\n";
     }
 }
 
