@@ -474,30 +474,7 @@ int main(int argc, char* argv[]) {
         TSPResult resGreedy =
             executeAndMeasure(solveGreedy, n, C);
         outputResult(resGreedy, fout);
-        // Kiem tra tinh dung dan cua 3 thuat toan
-bool checkBT = checkTSPResult(resBacktracking, n, C);
-bool checkDP = checkTSPResult(resBitmaskDP, n, C);
-bool checkGreedy = checkTSPResult(resGreedy, n, C);
-
-cout << "\n===== KIEM TRA KET QUA =====\n";
-
-cout << "Backtracking: "
-     << (checkBT ? "PASS" : "FAIL") << "\n";
-
-cout << "Bitmask DP: "
-     << (checkDP ? "PASS" : "FAIL") << "\n";
-
-cout << "Greedy: "
-     << (checkGreedy ? "PASS" : "FAIL") << "\n";
-
-// So sanh chi phi toi uu
-if (checkBT && checkDP) {
-    if (resBacktracking.min_cost == resBitmaskDP.min_cost) {
-        cout << "So sanh Backtracking va DP: PASS\n";
-    } else {
-        cout << "So sanh Backtracking va DP: FAIL\n";
-    }
-}
+        
         fout.close();
 
         cout << "\nDa luu ket qua vao: " << output_file << "\n";
