@@ -15,7 +15,7 @@ struct TSPResult {
     string strategy_name;   // Tên chiến lược: BACKTRACKING, BITMASK DP, GREEDY
     int min_cost;           // Chi phí tối thiểu (hoặc chi phí tìm được)
     vector<int> path;       // Lộ trình đi qua các thành phố (0 -> ... -> 0)
-    long long time_ms;      // Thời gian chạy thực nghiệm (ms)
+    long long time_us;      // Thời gian chạy thực nghiệm (micro giây)   
     bool is_cost_min_label; // true: in "Chi phi toi thieu:", false: in "Chi phi:" (theo mẫu đề bài)
 };
 
