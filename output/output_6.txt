@@ -1,12 +1,12 @@
 ====BACKTRACKING====
 Chi phi toi thieu: 250
 Lo trinh: 0 2 3 1 5 4 0
-Thoi gian: 83 micro giay
+Thoi gian: 60 micro giay
 ====BITMASK DP====
 Chi phi toi thieu: 250
 Lo trinh: 0 4 5 1 3 2 0
-Thoi gian: 248 micro giay
+Thoi gian: 135 micro giay
 ==== GREEDY ====
 Chi phi: 250
 Lo trinh: 0 4 5 1 3 2 0
-Thoi gian: 106 micro giay
+Thoi gian: 22 micro giay
