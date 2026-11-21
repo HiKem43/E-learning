@@ -1,5 +1,6 @@
-
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <fstream>
+#include <iostream>
 using namespace std;
 
 const int MAXN = 1005;
